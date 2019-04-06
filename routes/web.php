@@ -10,11 +10,70 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('admin',[
+	'as'=>'admin',
+	'uses'=>'Controller@postLoginAdmin'
 
+	]);
+Route::post('admin',[
+	'as'=>'admin',
+	'uses'=>'Controller@postLoginAdmin'
 
+	]);
+Route::get('lg',[
+	'as'=>'lg',
+	'uses'=>'Controller@getLg'
+]);
+//Route::get('danhmuc',[
+//	'as'=>'danhmuc',
+//	'uses'=>'Controller@getListDanhMuc'
+//	]
+//);
+/////////////////////////////DANH MUC SAN PHAM/////////////////////////////////
+Route::get('danhmuc',[
+	'as'=>'danhmuc',
 
-Route::get('/', 'Controller@master');
+	'uses'=>'Controller@getListDanhMuc'
+	]
+);
+Route::post('them_danhmuc',[
+	'as'=>'them_danhmuc',
+	'uses'=>'Controller@addListDanhMuc'
+	]
+);
+Route::get('danhmuc/xoa_danhmuc/{id}','Controller@delListDanhMuc');
+Route::get('danhmuc/suadanhmuc/{id}',[
+	'as'=>'danhmuc/suadanhmuc',
+	'uses'=>'Controller@suaDanhMuc'
+	]
+);
+Route::get('danhmuc/sua_danhmuc/{id}','Controller@suaListDanhMuc');
+Route::get('danhmuc/chitiet/{id}','Controller@chitietListDanhMuc');
+//---------------------------------DON HANG-----------------------------------------//
+Route::get('donhang',[
+	'as'=>'donhang',
+	'uses'=>'Controller@getListDonHang'
+	]
+);
+Route::get('donhang/chitiet/{id}',[
+	'as'=>'donhang/chitiet',
+	'uses'=>'Controller@getChitietDonHang'
+	]
+);
+//---------------------------------DON HANG-----------------------------------------//
+//////////////////////////////DANH MUC SAN PHAM///////////////////////////////////
+Route::get('sanpham',[
+	'as'=>'sanpham',
 
+	'uses'=>'Controller@getListSanpham'
+	]
+);
+Route::get('delete/{name}',
+'Controller@getProductDel'
+);
+
+//saddddssssssssssssssssssssss 111111111111111111111111111111111111111111111111111111
+//saddddssssssssssssssssssssss 111111111111111111111111111111111111111111111111111111
 Route::get('',[
 	'as'=>'trang-chu',
 	'uses'=>'Controller@getIndex'
@@ -54,6 +113,10 @@ Route::get('search',[
 	'uses'=>'Controller@getSearch'
 
 	]);
+Route::get('tintuc',[
+		'as'=>'tintuc',
+		'uses'=>'Controller@getTinTuc'
+]);
 Route::get('dangnhap',[
 	'as'=>'dang-nhap',
 	'uses'=>'Controller@getLogin'

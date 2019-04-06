@@ -60,8 +60,8 @@
 											</p>
 										</div>
 										<div class="single-item-caption">
-											<a class="add-to-cart pull-left" href="shopping_cart.html"><i class="fa fa-shopping-cart"></i></a>
-											<a class="beta-btn primary" href="product.html">Chi Tiết <i class="fa fa-chevron-right"></i></a>
+											<a class="add-to-cart pull-left" href="{{route('themgiohang',$sp->id)}}"><i class="fa fa-shopping-cart"></i></a>
+											<a class="beta-btn primary" href="{{route('chitietsanpham',$sp->id)}}">Chi Tiết <i class="fa fa-chevron-right"></i></a>
 											<div class="clearfix"></div>
 										</div>
 									</div>
@@ -105,8 +105,8 @@
 											</p>
 										</div>
 										<div class="single-item-caption">
-											<a class="add-to-cart pull-left" href="shopping_cart.html"><i class="fa fa-shopping-cart"></i></a>
-											<a class="beta-btn primary" href="product.html">Chi tiết <i class="fa fa-chevron-right"></i></a>
+											<a class="add-to-cart pull-left" href="{{route('themgiohang',$sp_kh->id)}}"><i class="fa fa-shopping-cart"></i></a>
+											<a class="beta-btn primary" href="{{route('chitietsanpham',$sp_kh->id)}}">Chi tiết <i class="fa fa-chevron-right"></i></a>
 											<div class="clearfix"></div>
 										</div>
 									</div>

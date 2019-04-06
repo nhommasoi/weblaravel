@@ -1,4 +1,4 @@
-		@extends('master')
+	@extends('master')
 	@section('content')
 	<div class="inner-header">
 		<div class="container">
@@ -38,7 +38,7 @@
 							<input type="password" name="password" required>
 						</div>
 						<div class="form-block">
-							<button type="submit" class="btn btn-primary">Đăng nhập</button>
+							<button type="submit" class="btn btn-primary">Login</button>
 						</div>
 					</div>
 					<div class="col-sm-3"></div>

@@ -16,19 +16,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       view()->composer(['header','page\dathang'],function($view){
+       view()->composer(['header','page.dathang'],function($view){
         
         $loai_sp=ProductType::all();
         
         $view->with('loai_sp',$loai_sp);
        });
-       // view()->composer(['header',page_dat-],function($view){
+       // view()->composer(['header','page\dathang'],function($view){
        //  $product_cart=ProductType::all();
        //  $view->with('product_cart',$product_cart);
        // });
 
 
-       view()->composer(['header','page\dathang'],function($view){
+       view()->composer(['header','page.dathang'],function($view){
          if(Session('cart')){
              $oldCart=Session::get('cart');
             $cart=new Cart($oldCart);
@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
             'totalPrice'=>$cart->totalPrice,'totalQly'=>$cart->totalQty]);
         }
        });
+
 
     }
 

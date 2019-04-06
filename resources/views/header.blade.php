@@ -111,9 +111,9 @@
 								@endforeach
 							</ul>
 						</li>
-						<li><a href="{{route('gioithieu')}}">Giới thiệu</a></li>
+							<li><a href="{{route('gioithieu')}}">Giới thiệu</a></li>
 						<li><a href="{{route('lienhe')}}">Liên hệ</a></li>
-						<li><a href="{{route('lienhe')}}">Tin Tức</a></li>
+						<li><a href="{{route('tintuc')}}">Tin Tức</a></li>
 					</ul>
 					<div class="clearfix"></div>
 				</nav>

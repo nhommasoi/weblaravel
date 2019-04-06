@@ -24,11 +24,131 @@ use Auth;
 // use App\Use;
 class Controller extends BaseController
 {
-    public function master(){
-        return view('master');
+    public function getIndexAdmin(){
+        return view('admin.layout.index');
     }
+   
+    public function getAdmin(){
+        return view('admin.master');
+    }
+    public function getLg(){
+        return view('admin.login');
+    }
+    //public function getListDanhMuc(){
+    //    $listDM=ProductType::all();
+    //    return view('admin.collection.list',compact('listDM'));
+    //}
+//////////////////////////DANH MUC SAN PHAM/////////////////////////////
+    public function getListDanhMuc(){
+        $listDM=ProductType::all();
+        return view('admin.product.cat_list',compact('listDM'));
+    }
+    public function addListDanhMuc(Request $r){
+        /*
+        $this->validate($r, [
+            'cat_name'=>'required|unique:type_products,name|min:3|max:100'
+        ], [
+            'cat_name.required'=>'Bạn chưa nhập tên Loại',
+            'cat_name.unique'=>'Tên loại đã tồn tại', 
+            'cat_name.min'=>'Tên loại có độ dài từ 3 đến 100 ký tự',
+            'cat_name.max'=>'Tên loại có độ dài từ 3 đến 100 ký tự'
+        ]);
+        */
+        $pro = new ProductType;
+        $pro->id = $r->id;
+        $pro->name = $r->cat_name;
+        $pro->description = $r->description;
+        $pro->image = 'image';
+        $pro->save();
+        return redirect()->back()->with('thongbao',"Bạn đã thêm sản phẩm thành công");}
+    public function delListDanhMuc($id){
+        $cat = ProductType::find($id);
+        
+        if ($cat->delete()==false) {
+           return redirect()->back()->with('thongbao','Loại hàng vẫn còn sản phẩm, không thể xóa!');
+            
+        }
+        else  return redirect()->back()->with('thongbao','Xóa thành công');}
 
-    public function getIndex(){
+    public function suaDanhMuc($id){
+        $DanhMuc=ProductType::all();
+        //$dmz=$DanhMuc[$id-1];
+        $dmz=ProductType::find($id);
+        return view('admin.product.cat_edit',compact('dmz','id'));
+    }
+    public function suaListDanhMuc(Request $r, $id){
+        $cat_edit = ProductType::find($id);
+        $cat_edit->name = $r->name;
+        $ten=$cat_edit->name;
+        $cat_edit->description = $r->description;
+        $cat_edit->image = 'image';
+        $cat_edit->save();
+        
+        return redirect('danhmuc')->with('thongbao','Đã sửa loại sản phẩm: '.$ten );
+    }
+    public function chitietListDanhMuc($id){
+    	$listDM_n=ProductType::find($id);
+        $list_detail_DM=product::where('id_type','like',$id)->paginate(99,['*'],'pag');;
+        return view('admin.product.cat_list_detail',compact('list_detail_DM','id','listDM_n'));
+    }
+        //-------------DON HANG------------//
+
+    public function getListDonHang(){
+        $listDH=bill::all();
+        return view('admin.news.cat_list',compact('listDH'));
+    }
+    public function getChitietDonHang($id){
+    	$bill=Bill::find($id);
+        $listDH_chitiet=BillDetail::where('id_bill','like',$id)->paginate(99,['*'],'pag');
+        $img=array();
+        foreach($listDH_chitiet as $k=>$b){
+            $img[]=$b->id_product;
+        }
+        $url_img=array();
+        for ($i=0; $i < count($img) ; $i++) { 
+            $url_img[]=Product::find($img[$i]);
+        }
+        $khach_hang=Customer::find($id);
+        return view('admin.news.list',compact('listDH_chitiet','id','khach_hang','bill','url_img','img'));
+    }
+    //-------------DON HANG------------//
+///////////////////////////END======DANH MUC SAN PHAM///////////////////////
+    public function getListSanpham(){
+        
+        $listSP=Product::where('unit_price','<>',0)->paginate(7,['*'],'pag');
+        return view('admin.product.list',compact('listSP'));
+    }
+    public function getProductDel($id){
+        $cat = Product::find($id);
+        $cat->delete();
+        return redirect()->back()->with('thongbao','Xóa chuyên mục thành công');
+    }
+    public function postLoginAdmin(Request $req){
+        $this->validate($req,
+            [
+                'email'=>'required|email',
+                'password'=>'required|min:1|max:20'
+            ],
+            [
+                'email.required'=>'Vui lòng nhập lại email',
+                'email.email'=>'Email không đúng định dạng',
+                'password.required'=>'Vui lòng nhập mật khẩu'
+            ]
+
+        );
+        $credentials = array('email' =>$req->email ,'password'=> $req->password);
+        if(Auth::attempt($credentials)){
+            return  view('admin.master');
+
+        }else{
+            return redirect()->back()->with(['flag'=>'danger','message'=>'Đăng nhập không thành công']);
+
+        }
+
+    }
+    // day la fon
+
+     public function getIndex(){
 
         $slide =slide::all();
         $new_product =Product::where('new',1)->paginate(4,['*'],'pag');
@@ -43,7 +163,7 @@ class Controller extends BaseController
         $loaisp=ProductType::all();
         $ten_sp=ProductType::where('id',$type)->first();
 
-        return view('page\loai_sanpham',compact('sp_loai','sp_khac','loaisp','ten_sp'));
+        return view('page.loai_sanpham',compact('sp_loai','sp_khac','loaisp','ten_sp'));
     }
     public function getChiTietSp($id){
 
@@ -51,35 +171,40 @@ class Controller extends BaseController
         $sp_tuongtu=Product::where('id_type',$sanpham->id_type)->paginate(3,['*'],'pag');
         $sp_banchay=Product::where('id_type',$sanpham->id_type)->paginate(4,['*'],'pag');
         $sp_moinhat=Product::where('id_type',$sanpham->id_type)->paginate(4,['*'],'pag');
-        return view('page\chitiet_sp',compact('sanpham','sp_tuongtu','sp_banchay','sp_moinhat'));
+        return view('page.chitiet_sp',compact('sanpham','sp_tuongtu','sp_banchay','sp_moinhat'));
 
     }
     public function getGioiThieu(){
-        return view('page\gioithieu');
+        return view('page.gioithieu');
     }
     public function getText(){
           $tt =Product::where('new',1);
-        return view('page\text',compact('tt'));
+        return view('page.text',compact('tt'));
     }
     
      public function getLienHe(){
-        return view('page\lienhe');
+        return view('page.lienhe');
+    }
+     public function getTinTuc(){
+        $news =News::All();
+        return view('page.tintuc',compact('news'));
+
     }
     public function getSearch(Request $req ){
         $product =Product::where('name','like','%'.$req->sear.'%')
                             ->orWhere('unit_price','like','%'.$req->sear.'%')
                             ->get();
-        return view('page\search',compact('product'));
+        return view('page.search',compact('product'));
 
     }
     public function getAllCart(){
-        return view('page\all_cart');
+        return view('page.all_cart');
     }
     public function getLogin(){
-        return view('page\dangnhap');
+        return view('page.dangnhap');
     }
     public function getSignup(){
-        return view('page\dangki');
+        return view('page.dangki');
     }
     public function getAddCart(Request $req, $id){
         $product =Product::find($id);
@@ -105,7 +230,7 @@ class Controller extends BaseController
     }
     public function getDatHang(){
 
-        return view('page\dathang');
+        return view('page.dathang');
     } 
     public function postDatHang(Request $req){
         $cart=Session::get('cart');
